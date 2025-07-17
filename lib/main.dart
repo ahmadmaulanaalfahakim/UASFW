@@ -1,14 +1,14 @@
-import 'dart:convert';
+import 'dart:convert'; //Untuk decode response JSON dari API
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart'; //  Komponen UI Material Design
+import 'package:flutter/services.dart'; // Untuk menyalin password ke clipboard
+import 'package:http/http.dart' as http; //Untuk melakukan request ke API eksternal
 
-void main() {
-  runApp(const MyApp());
+void main() { //Fungsi utama untuk menjalankan aplikasi Flutter.
+  runApp(const MyApp()); //Menjalankan widget MyApp sebagai root.
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget { //Widget utama yang membungkus seluruh aplikasi Menampilkan aplikasi dengan tema dan halaman utama (MyHomePage)
   const MyApp({super.key});
 
   @override
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatefulWidget { // Widget utama halaman aplikasi Bersifat stateful karena ada perubahan state (loading, password list)
   const MyHomePage({super.key, required this.title});
 
   final String title;
@@ -33,10 +33,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> passwords = [];
-  bool loading = false;
+  List<String> passwords = []; //passwords: Menyimpan daftar password yang dihasilkan
+  bool loading = false; //loading: Menandakan sedang proses fetch password
 
-  Future<String> _fetchPassword() async {
+  Future<String> _fetchPassword() async { //Mengambil password dari API https://api.genratr.com/ Mengambil password dari response JSON
     final String url =
         "https://api.genratr.com/?length=16&uppercase&lowercase&special&numbers";
     final res = await http.get(Uri.parse(url));
@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> _getPassword() async {
+  Future<void> _getPassword() async { //Menjalankan loading, memanggil _fetchPassword, dan memasukkan password ke list jika berhasil
     setState(() {
       loading = true;
     });
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar( //Judul aplikasi dari widget.title
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
@@ -87,8 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             SizedBox(
               width: double.infinity,
-              child: TextButton(
-                onPressed: _getPassword,
+              child: TextButton( 
+                onPressed: _getPassword, //Ketika ditekan, memanggil API dan menampilkan, password Jika loading == true, tampilkan CircularProgressIndicator
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             SizedBox(height: 16),
-            passwords.isEmpty
+            passwords.isEmpty //Menampilkan pesan jika belum ada password
                 ? SizedBox(
                     width: double.infinity,
                     child: Card(
@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   )
                 : Expanded(
-                    child: ListView.builder(
+                    child: ListView.builder( //Jika sudah ada, tampilkan dalam bentuk list dengan: Icon Copy dan Delete
                       itemCount: passwords.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
